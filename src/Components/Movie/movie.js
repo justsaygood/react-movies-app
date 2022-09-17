@@ -19,7 +19,7 @@ export default class Movie extends React.Component {
         return this
       }
       const subString = this.substring(0, numberSymbols - 1)
-      return `${useWordBoundary ? subString.substring(0, subString.lastIndexOf(' ')) : subString}...`
+      return `${useWordBoundary ? subString.substring(0, subString.lastIndexOf(' ')) : subString} ...`
     }
 
     const briefOverview = summary.apply(movie.overview, [200, true])
@@ -41,7 +41,7 @@ export default class Movie extends React.Component {
         <Text className="movie__date">{format(date, 'MMMM d, y')}</Text>
         <Tag className="movie__tag">Genre is:</Tag>
         <Paragraph className="movie__overview">{briefOverview}</Paragraph>
-        <Rate allowHalf defaultValue={2.5} count={10} />
+        <Rate defaultValue={0} count={10} />
       </Card>
     )
   }

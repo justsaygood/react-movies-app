@@ -15,7 +15,11 @@ export default function MovieList({ movies, loading, error, offline }) {
     ))
   }
   if (loading) {
-    items = <Spin className="spinner" size="large" />
+    items = (
+      <div className="spinner-wrapper">
+        <Spin className="spinner" size="large" />
+      </div>
+    )
   }
   if (error) {
     items = <Alert message={error.message} type="error" showIcon />
