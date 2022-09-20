@@ -1,17 +1,29 @@
 import React from 'react'
-import { Card, Tag, Rate, Typography } from 'antd'
+import { Card, Tag, Rate, Typography, Spin } from 'antd'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 
+import ApiService from '../../api-service'
 import './movie.css'
 
 const { Title, Paragraph, Text } = Typography
 
 export default class Movie extends React.Component {
+  state = {
+    img: null,
+  }
+
+  componentDidMount() {
+    const { movie } = this.props
+    ApiService.getPoster(movie.poster_path)
+      .then((url) => this.setState({ img: url }))
+      .catch(() => this.setState({ img: 'No such image' }))
+  }
+
   render() {
     const { movie } = this.props
-    const url = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
-    const cover = <img src={url} alt={movie.original_title} />
+    const { img } = this.state
+    const cover = img ? <img src={img} alt={movie.original_title} /> : <Spin />
     const date = parseISO(movie.release_date)
 
     function summary(numberSymbols, useWordBoundary) {
@@ -22,7 +34,7 @@ export default class Movie extends React.Component {
       return `${useWordBoundary ? subString.substring(0, subString.lastIndexOf(' ')) : subString} ...`
     }
 
-    const briefOverview = summary.apply(movie.overview, [200, true])
+    const briefOverview = summary.apply(movie.overview, [160, true])
     const rating = Math.round(movie.vote_average * 10) / 10
 
     let movieRating = 'movie__rating'

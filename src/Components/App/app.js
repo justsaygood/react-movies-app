@@ -1,42 +1,44 @@
 import React from 'react'
+import { Tabs } from 'antd'
 
-import MovieList from '../MovieList/movie-list'
-import ApiService from '../../api-service'
+import SearchContent from '../SearchContent/search-content'
+import RatedContent from '../RatedContent/rated-content'
 
 import './app.css'
 
 export default class App extends React.Component {
   state = {
-    movies: null,
-    loading: true,
-    error: null,
-    offline: false,
-  }
-
-  componentDidMount() {
-    window.addEventListener('offline', () => {
-      this.setState({ offline: true })
-    })
-    setTimeout(() => {
-      ApiService.getMovies()
-        .then((body) => {
-          console.log(body)
-          this.setState({
-            movies: body.results,
-            loading: false,
-          })
-        })
-        .catch((error) => {
-          this.setState({
-            error,
-            loading: false,
-          })
-        })
-    }, 1000)
+    currentPage: 'search',
   }
 
   render() {
-    const { movies, loading, error, offline } = this.state
-    return <MovieList movies={movies} loading={loading} error={error} offline={offline} />
+    const { currentPage } = this.state
+    const optionPage = [
+      { label: 'SearchContent', key: 'search' },
+      { label: 'Rated', key: 'rated' },
+    ]
+    let body
+
+    switch (currentPage) {
+      case 'search':
+        body = <SearchContent />
+        break
+      case 'rated':
+        body = <RatedContent />
+        break
+
+      default:
+        break
+    }
+    const { TabPane } = Tabs
+    return (
+      <main className="app">
+        <Tabs items={optionPage}>
+          <TabPane tab="Search" />
+          <TabPane tab="Rated" />
+        </Tabs>
+        {body}
+      </main>
+    )
   }
 }

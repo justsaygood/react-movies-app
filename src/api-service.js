@@ -20,4 +20,12 @@ export default class ApiService {
     }
     return body
   }
+
+  static async getPoster(id) {
+    if (!id) throw new Error('Could not load poster')
+    const response = await fetch(`https://image.tmdb.org/t/p/w500${id}`)
+    const file = await response.blob()
+    const url = URL.createObjectURL(file)
+    return url
+  }
 }

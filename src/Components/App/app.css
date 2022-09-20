@@ -1,1 +1,9 @@
 @import '~antd/dist/antd.css';
+
+.app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1010px;
+    padding: 36px;
+}
