@@ -1,20 +1,40 @@
 import React from 'react'
-import { Tabs } from 'antd'
+import { Tabs, Alert } from 'antd'
 
 import SearchContent from '../SearchContent/search-content'
 import RatedContent from '../RatedContent/rated-content'
+import { GenreProvider } from '../GenresContext/genres-context'
+import ApiService from '../../api-service'
 
 import './app.css'
 
 export default class App extends React.Component {
   state = {
     currentPage: 'search',
+    error: null,
+    genres: null,
+  }
+
+  componentDidMount() {
+    window.addEventListener('offline', () => {
+      this.setState({ error: new Error('No internet connection') })
+    })
+    window.addEventListener('online', () => {
+      this.setState({ error: null })
+    })
+    this.getGenres()
+  }
+
+  getGenres = () => {
+    ApiService.getGenres()
+      .then((genres) => this.setState({ genres }))
+      .catch((error) => this.setState({ error }))
   }
 
   render() {
-    const { currentPage } = this.state
+    const { currentPage, genres, error } = this.state
     const optionPage = [
-      { label: 'SearchContent', key: 'search' },
+      { label: 'Search', key: 'search' },
       { label: 'Rated', key: 'rated' },
     ]
     let body
@@ -30,15 +50,15 @@ export default class App extends React.Component {
       default:
         break
     }
-    const { TabPane } = Tabs
+
     return (
-      <main className="app">
-        <Tabs items={optionPage}>
-          <TabPane tab="Search" />
-          <TabPane tab="Rated" />
-        </Tabs>
-        {body}
-      </main>
+      <GenreProvider value={genres}>
+        {error ? <Alert message={error.message} type="error" showIcon /> : null}
+        <main className="app">
+          <Tabs items={optionPage} />
+          {body}
+        </main>
+      </GenreProvider>
     )
   }
 }

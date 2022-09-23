@@ -11,6 +11,9 @@ export default class SearchContent extends React.Component {
     error: null,
     offline: false,
     page: 0,
+    searchValue: localStorage.getItem('searchPageData')
+      ? JSON.parse(localStorage.getItem('searchPageData')).searchValue
+      : '',
   }
 
   componentDidMount() {
@@ -35,11 +38,21 @@ export default class SearchContent extends React.Component {
     }, 1000)
   }
 
+  onSearchChange = (event) => {
+    this.setState({ searchValue: event.target.value, loading: true, error: false })
+  }
+
   render() {
-    const { movies, error, loading, offline, page } = this.state
+    const { movies, error, loading, offline, page, searchValue } = this.state
     return (
       <section className="app__content">
-        <Input className="app__search" type="text" placeholder="Type to search ..." />
+        <Input
+          className="app__search"
+          type="text"
+          placeholder="Type to search ..."
+          value={searchValue}
+          onChange={this.onSearchChange}
+        />
         <MovieList movies={movies} loading={loading} error={error} offline={offline} />
         <Pagination className="app__pagination" size="small" page={page} />
       </section>

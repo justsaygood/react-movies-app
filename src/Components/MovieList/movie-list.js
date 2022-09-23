@@ -22,7 +22,14 @@ export default function MovieList({ movies, loading, error, offline }) {
     )
   }
   if (error) {
-    items = <Alert message={error.message} type="error" showIcon />
+    items = (
+      <Alert
+        message="Error"
+        description="Something has gone wrong. But we're fixing this problem already"
+        type="error"
+        showIcon
+      />
+    )
   }
   if (offline) {
     items = <Alert message="No internet connection" type="error" showIcon />

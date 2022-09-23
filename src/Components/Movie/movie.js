@@ -1,10 +1,13 @@
 import React from 'react'
-import { Card, Tag, Rate, Typography, Spin } from 'antd'
+import { Card, Rate, Typography, Spin } from 'antd'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 
-import ApiService from '../../api-service'
 import './movie.css'
+
+import ApiService from '../../api-service'
+import Genres from '../Genres/genres'
+import { GenreConsumer } from '../GenresContext/genres-context'
 
 const { Title, Paragraph, Text } = Typography
 
@@ -51,7 +54,7 @@ export default class Movie extends React.Component {
           <div className={movieRating}>{rating}</div>
         </Title>
         <Text className="movie__date">{format(date, 'MMMM d, y')}</Text>
-        <Tag className="movie__tag">Genre is:</Tag>
+        <GenreConsumer>{(genres) => <Genres genres={genres} movieGenres={movie.genre_ids} />}</GenreConsumer>
         <Paragraph className="movie__overview">{briefOverview}</Paragraph>
         <Rate defaultValue={0} count={10} />
       </Card>

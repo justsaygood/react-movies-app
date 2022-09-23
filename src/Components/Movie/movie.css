@@ -24,7 +24,7 @@
 h1.movie__title {
     font-style: normal;
     font-weight: 400;
-    font-size: 26px!important;
+    font-size: 20px!important;
     line-height: 28px;
     margin-bottom: 7px;
     color: black;
@@ -39,8 +39,8 @@ h1.movie__title {
     justify-content: center;
     align-items: center;
     position: fixed;
-    top: 25px;
-    right: 20px;
+    top: 15px;
+    right: 4px;
 }
 .movie__rating--yellow {
     border: 1px solid #EEDC40;
@@ -54,7 +54,7 @@ h1.movie__title {
 .movie__rating--orange {
     border: 1px solid orange;
 }
-h1.movie__date {
+.ant-card .ant-card-body .movie__date {
     font-size: 12px;
     line-height: 22px;
     color: #827E7E;
