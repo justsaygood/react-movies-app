@@ -6,6 +6,7 @@ import RatedContent from '../RatedContent/rated-content'
 import { GenreProvider } from '../GenresContext/genres-context'
 import ApiService from '../../api-service'
 
+import 'antd/dist/antd.css'
 import './app.css'
 
 export default class App extends React.Component {
@@ -29,6 +30,12 @@ export default class App extends React.Component {
     ApiService.getGenres()
       .then((genres) => this.setState({ genres }))
       .catch((error) => this.setState({ error }))
+  }
+
+  onTabChange = (key) => {
+    this.setState({
+      currentPage: key,
+    })
   }
 
   render() {
@@ -55,7 +62,7 @@ export default class App extends React.Component {
       <GenreProvider value={genres}>
         {error ? <Alert message={error.message} type="error" showIcon /> : null}
         <main className="app">
-          <Tabs items={optionPage} />
+          <Tabs items={optionPage} onChange={this.onTabChange} selectedKeys={[currentPage]} />
           {body}
         </main>
       </GenreProvider>

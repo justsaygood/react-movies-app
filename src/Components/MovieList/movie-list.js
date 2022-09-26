@@ -25,7 +25,7 @@ export default function MovieList({ movies, loading, error, offline }) {
     items = (
       <Alert
         message="Error"
-        description="Something has gone wrong. But we're fixing this problem already"
+        description="Something has gone wrong. But we're fixing this problem"
         type="error"
         showIcon
       />

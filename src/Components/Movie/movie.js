@@ -14,6 +14,7 @@ const { Title, Paragraph, Text } = Typography
 export default class Movie extends React.Component {
   state = {
     img: null,
+    stars: 0,
   }
 
   componentDidMount() {
@@ -21,11 +22,32 @@ export default class Movie extends React.Component {
     ApiService.getPoster(movie.poster_path)
       .then((url) => this.setState({ img: url }))
       .catch(() => this.setState({ img: 'No such image' }))
+
+    try {
+      const stars = JSON.parse(localStorage.getItem('stars'))
+      if (stars[movie.id]) {
+        this.setState({ stars: stars[movie.id] })
+      }
+    } catch {
+      localStorage.setItem('stars', '{}')
+    }
+  }
+
+  setRating = (value) => {
+    const { movie } = this.props
+    ApiService.rateMovie(movie.id, value).then(() => {
+      const stars = localStorage.getItem('stars')
+      if (!stars) localStorage.setItem('stars', '{}')
+      const newObject = JSON.parse(stars)
+      newObject[movie.id] = value
+      localStorage.setItem('stars', JSON.stringify(newObject))
+      this.setState({ stars: value })
+    })
   }
 
   render() {
     const { movie } = this.props
-    const { img } = this.state
+    const { img, stars } = this.state
     const cover = img ? <img src={img} alt={movie.original_title} /> : <Spin />
     const date = parseISO(movie.release_date)
 
@@ -56,7 +78,7 @@ export default class Movie extends React.Component {
         <Text className="movie__date">{format(date, 'MMMM d, y')}</Text>
         <GenreConsumer>{(genres) => <Genres genres={genres} movieGenres={movie.genre_ids} />}</GenreConsumer>
         <Paragraph className="movie__overview">{briefOverview}</Paragraph>
-        <Rate defaultValue={0} count={10} />
+        <Rate defaultValue={0} count={10} value={stars} onChange={this.setRating} />
       </Card>
     )
   }

@@ -14,6 +14,10 @@ export default class SearchContent extends React.Component {
     searchValue: localStorage.getItem('searchPageData')
       ? JSON.parse(localStorage.getItem('searchPageData')).searchValue
       : '',
+    allMovies: null,
+    paginationValue: localStorage.getItem('searchPageData')
+      ? JSON.parse(localStorage.getItem('searchPageData')).paginationValue
+      : 1,
   }
 
   componentDidMount() {
@@ -26,6 +30,7 @@ export default class SearchContent extends React.Component {
           console.log(body)
           this.setState({
             movies: body.results,
+            allMovies: body.total_results,
             loading: false,
           })
         })
@@ -42,8 +47,10 @@ export default class SearchContent extends React.Component {
     this.setState({ searchValue: event.target.value, loading: true, error: false })
   }
 
+  onPaginationChange = (paginationValue) => this.setState({ paginationValue })
+
   render() {
-    const { movies, error, loading, offline, page, searchValue } = this.state
+    const { movies, error, loading, offline, page, allMovies, searchValue, paginationValue } = this.state
     return (
       <section className="app__content">
         <Input
@@ -54,7 +61,15 @@ export default class SearchContent extends React.Component {
           onChange={this.onSearchChange}
         />
         <MovieList movies={movies} loading={loading} error={error} offline={offline} />
-        <Pagination className="app__pagination" size="small" page={page} />
+        <Pagination
+          className="app__pagination"
+          size="small"
+          showSizeChanger={false}
+          page={page}
+          current={paginationValue}
+          total={allMovies}
+          onChange={this.onPaginationChange}
+        />
       </section>
     )
   }

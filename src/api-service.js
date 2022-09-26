@@ -6,9 +6,12 @@ export default class ApiService {
 
   static apiKey = '2074a6b716f9e8007bd7463a21d9ab0e'
 
+  static guestSessionId
+
   static async getMovies() {
     const res = await fetch(
-      'https://api.themoviedb.org/3/search/movie/?api_key=2074a6b716f9e8007bd7463a21d9ab0e&include_adult=false&query=return',
+      // eslint-disable-next-line no-template-curly-in-string
+      'https://api.themoviedb.org/3/search/movie/?api_key=${this.apiKey}&include_adult=false&query=return&page=${page}',
       {
         headers: this.headers,
       }
@@ -39,5 +42,54 @@ export default class ApiService {
     })
 
     return genres
+  }
+
+  static async guestSession() {
+    const response = await fetch('https://api.themoviedb.org/3/authentication/guest_session/new', {
+      headers: this.headers,
+    })
+    const body = await response.json()
+    console.log(body)
+    return body
+  }
+
+  static async guestSessionInit() {
+    this.guestSessionId = localStorage.getItem('guestSessionId')
+
+    if (!this.guestSessionId) {
+      const response = await this.createGuestSession()
+      this.guestSessionId = response.guest_session_id
+      localStorage.setItem('guestSessionId', response.guest_session_id)
+    }
+  }
+
+  static async rateMovie(id, rating) {
+    const requestBody = {
+      value: rating,
+    }
+    const response = await fetch(
+      `https://api.themoviedb.org/3/movie/${id}/rating?api_key=${this.apiKey}&guest_session_id=${this.guestSessionId}`,
+      {
+        method: 'POST',
+        body: JSON.stringify(requestBody),
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+        },
+      }
+    )
+    const body = await response.json()
+    if (body.success !== true) throw new Error('rating is unavailable')
+    console.log(body)
+    console.log(response)
+    return body
+  }
+
+  static async getRatedMovies(page) {
+    if (!this.guestSessionId) throw new Error('Init guest session')
+    const response = await fetch(
+      `https://api.themoviedb.org/3/guest_session/${this.guestSessionId}/rated/movies?api_key=${this.apiKey}&page=${page}}`
+    )
+    const body = await response.json()
+    return body
   }
 }
