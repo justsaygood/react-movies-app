@@ -6,8 +6,8 @@ import RatedContent from '../RatedContent/rated-content'
 import { GenreProvider } from '../GenresContext/genres-context'
 import ApiService from '../../api-service'
 
-import 'antd/dist/antd.css'
 import './app.css'
+import 'antd/dist/antd.css'
 
 export default class App extends React.Component {
   state = {

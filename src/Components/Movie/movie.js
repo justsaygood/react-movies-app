@@ -3,6 +3,7 @@ import { Card, Rate, Typography, Spin } from 'antd'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 
+import noPoster from '../../Images/noPoster.png'
 import ApiService from '../../api-service'
 import Genres from '../Genres/genres'
 import { GenreConsumer } from '../GenresContext/genres-context'
@@ -21,7 +22,7 @@ export default class Movie extends React.Component {
     const { movie } = this.props
     ApiService.getPoster(movie.poster_path)
       .then((url) => this.setState({ img: url }))
-      .catch(() => this.setState({ img: 'No such image' }))
+      .catch(() => this.setState({ img: noPoster }))
 
     try {
       const stars = JSON.parse(localStorage.getItem('stars'))

@@ -19,7 +19,6 @@
 @media (max-width: 576px) {
 
     .ant-card-cover {
-        position: absolute;
         width: 60px;
         max-height: 91px;
         top: 6px;

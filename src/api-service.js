@@ -8,7 +8,7 @@ export default class ApiService {
 
   static guestSessionId
 
-  static async getMovies(searchQuery = 'it', page = 1) {
+  static async getMovies(searchQuery = 'return', page = 1) {
     if (!searchQuery) return { results: null }
     const res = await fetch(
       `https://api.themoviedb.org/3/search/movie/?api_key=${this.apiKey}&include_adult=false&query=${searchQuery}&page=${page}`,
