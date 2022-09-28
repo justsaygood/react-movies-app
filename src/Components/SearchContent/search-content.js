@@ -1,5 +1,6 @@
 import React from 'react'
 import { Input, Pagination } from 'antd'
+import { debounce } from 'lodash'
 
 import MovieList from '../MovieList/movie-list'
 import ApiService from '../../api-service'
@@ -7,10 +8,8 @@ import ApiService from '../../api-service'
 export default class SearchContent extends React.Component {
   state = {
     loading: false,
-    movies: null,
+    movies: [],
     error: null,
-    offline: false,
-    page: 0,
     searchValue: localStorage.getItem('searchPageData')
       ? JSON.parse(localStorage.getItem('searchPageData')).searchValue
       : '',
@@ -21,26 +20,70 @@ export default class SearchContent extends React.Component {
   }
 
   componentDidMount() {
-    window.addEventListener('offline', () => {
-      this.setState({ offline: true })
+    const { searchValue, paginationValue } = this.state
+    if (searchValue) {
+      this.onLoading()
+      this.getMovies(searchValue, paginationValue)
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { searchValue, paginationValue } = this.state
+    if (searchValue !== prevState.searchValue || paginationValue !== prevState.paginationValue) {
+      if (!searchValue) {
+        this.stopLoading()
+        this.getMovies.cancel()
+        return
+      }
+      this.onLoading()
+      this.getMovies(searchValue, paginationValue)
+    }
+  }
+
+  getMovies = debounce((searchValue, page) => {
+    ApiService.getMovies(searchValue, page)
+      .then((body) => {
+        this.setState({
+          movies: body.results,
+          allMovies: body.total_results,
+          loading: false,
+        })
+        this.saveState()
+      })
+      .catch((error) => {
+        this.setState({
+          error,
+          loading: false,
+        })
+      })
+  }, 800)
+
+  onLoading = () => {
+    this.setState({
+      loading: true,
+      error: null,
+      movies: [],
+      allMovies: 0,
     })
-    setTimeout(() => {
-      ApiService.getMovies()
-        .then((body) => {
-          console.log(body)
-          this.setState({
-            movies: body.results,
-            allMovies: body.total_results,
-            loading: false,
-          })
-        })
-        .catch((error) => {
-          this.setState({
-            error,
-            loading: false,
-          })
-        })
-    }, 1000)
+  }
+
+  stopLoading = () => {
+    this.setState({
+      loading: false,
+      movies: [],
+      allMovies: 0,
+      error: null,
+    })
+  }
+
+  saveState = () => {
+    const { paginationValue, searchValue } = this.state
+    let state = {
+      paginationValue,
+      searchValue,
+    }
+    state = JSON.stringify(state)
+    localStorage.setItem('searchPageData', state)
   }
 
   onSearchChange = (event) => {
@@ -50,7 +93,7 @@ export default class SearchContent extends React.Component {
   onPaginationChange = (paginationValue) => this.setState({ paginationValue })
 
   render() {
-    const { movies, error, loading, offline, page, allMovies, searchValue, paginationValue } = this.state
+    const { movies, error, loading, allMovies, searchValue, paginationValue } = this.state
     return (
       <section className="app__content">
         <Input
@@ -60,12 +103,11 @@ export default class SearchContent extends React.Component {
           value={searchValue}
           onChange={this.onSearchChange}
         />
-        <MovieList movies={movies} loading={loading} error={error} offline={offline} />
+        <MovieList movies={movies} loading={loading} error={error} />
         <Pagination
           className="app__pagination"
           size="small"
           showSizeChanger={false}
-          page={page}
           current={paginationValue}
           total={allMovies}
           onChange={this.onPaginationChange}

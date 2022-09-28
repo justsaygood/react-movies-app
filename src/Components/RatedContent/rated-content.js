@@ -35,7 +35,11 @@ export default class RatedContent extends React.Component {
   getMovies = debounce((page) => {
     ApiService.getRatedMovies(page)
       .then((body) => {
-        this.setState({ movies: body.results, loading: false, allMovies: body.total_results })
+        this.setState({
+          movies: body.results,
+          loading: false,
+          allMovies: body.total_results,
+        })
         this.saveState()
       })
       .catch((error) => {

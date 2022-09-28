@@ -23,6 +23,7 @@ export default class App extends React.Component {
     window.addEventListener('online', () => {
       this.setState({ error: null })
     })
+    ApiService.guestSessionInit()
     this.getGenres()
   }
 
@@ -62,7 +63,7 @@ export default class App extends React.Component {
       <GenreProvider value={genres}>
         {error ? <Alert message={error.message} type="error" showIcon /> : null}
         <main className="app">
-          <Tabs items={optionPage} onChange={this.onTabChange} selectedKeys={[currentPage]} />
+          <Tabs items={optionPage} onChange={this.onTabChange} />
           {body}
         </main>
       </GenreProvider>

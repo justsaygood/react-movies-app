@@ -3,11 +3,11 @@ import { Card, Rate, Typography, Spin } from 'antd'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
 
-import './movie.css'
-
 import ApiService from '../../api-service'
 import Genres from '../Genres/genres'
 import { GenreConsumer } from '../GenresContext/genres-context'
+
+import './movie.css'
 
 const { Title, Paragraph, Text } = Typography
 
@@ -49,7 +49,7 @@ export default class Movie extends React.Component {
     const { movie } = this.props
     const { img, stars } = this.state
     const cover = img ? <img src={img} alt={movie.original_title} /> : <Spin />
-    const date = parseISO(movie.release_date)
+    const date = movie.release_date ? format(parseISO(movie.release_date), 'MMMM d, y') : null
 
     function summary(numberSymbols, useWordBoundary) {
       if (this.length <= numberSymbols) {
@@ -75,7 +75,7 @@ export default class Movie extends React.Component {
           {movie.original_title}
           <div className={movieRating}>{rating}</div>
         </Title>
-        <Text className="movie__date">{format(date, 'MMMM d, y')}</Text>
+        <Text className="movie__date">{date}</Text>
         <GenreConsumer>{(genres) => <Genres genres={genres} movieGenres={movie.genre_ids} />}</GenreConsumer>
         <Paragraph className="movie__overview">{briefOverview}</Paragraph>
         <Rate defaultValue={0} count={10} value={stars} onChange={this.setRating} />

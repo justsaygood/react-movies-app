@@ -8,18 +8,18 @@ export default class ApiService {
 
   static guestSessionId
 
-  static async getMovies() {
+  static async getMovies(searchQuery = 'it', page = 1) {
+    if (!searchQuery) return { results: null }
     const res = await fetch(
-      // eslint-disable-next-line no-template-curly-in-string
-      'https://api.themoviedb.org/3/search/movie/?api_key=${this.apiKey}&include_adult=false&query=return&page=${page}',
+      `https://api.themoviedb.org/3/search/movie/?api_key=${this.apiKey}&include_adult=false&query=${searchQuery}&page=${page}`,
       {
         headers: this.headers,
       }
     )
 
     const body = await res.json()
-    if (!res.ok) {
-      throw new Error(`Could not load movies, received ${res.status}`)
+    if (body.results.length === 0) {
+      throw new Error('No movies found')
     }
     return body
   }
@@ -49,7 +49,6 @@ export default class ApiService {
       headers: this.headers,
     })
     const body = await response.json()
-    console.log(body)
     return body
   }
 
@@ -57,7 +56,7 @@ export default class ApiService {
     this.guestSessionId = localStorage.getItem('guestSessionId')
 
     if (!this.guestSessionId) {
-      const response = await this.createGuestSession()
+      const response = await this.guestSession()
       this.guestSessionId = response.guest_session_id
       localStorage.setItem('guestSessionId', response.guest_session_id)
     }
