@@ -1,0 +1,13 @@
+.app__content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ant-input {
+    margin-bottom: 32px!important;
+}
+.app__search {
+    margin-bottom: 32px;
+}

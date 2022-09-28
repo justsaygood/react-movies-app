@@ -5,6 +5,8 @@ import { debounce } from 'lodash'
 import MovieList from '../MovieList/movie-list'
 import ApiService from '../../api-service'
 
+import './search-content.css'
+
 export default class SearchContent extends React.Component {
   state = {
     loading: false,

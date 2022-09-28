@@ -79,7 +79,7 @@ export default class Movie extends React.Component {
         <Text className="movie__date">{date}</Text>
         <GenreConsumer>{(genres) => <Genres genres={genres} movieGenres={movie.genre_ids} />}</GenreConsumer>
         <Paragraph className="movie__overview">{briefOverview}</Paragraph>
-        <Rate defaultValue={0} count={10} value={stars} onChange={this.setRating} />
+        <Rate className="movie__stars" defaultValue={0} count={10} value={stars} onChange={this.setRating} />
       </Card>
     )
   }
