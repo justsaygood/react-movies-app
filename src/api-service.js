@@ -8,7 +8,7 @@ export default class ApiService {
 
   static guestSessionId
 
-  static baseURL = 'https://d2nsx85y22o8i8.cloudfront.net/3'
+  static baseURL = 'https://api.themoviedb.org/3'
 
   static async getMovies(searchQuery = 'return', page = 1) {
     if (!searchQuery) return { results: null }
