@@ -8,12 +8,29 @@ export default class ApiService {
 
   static guestSessionId
 
-  static baseURL = 'https://api.themoviedb.org/3'
+  static async guestSession() {
+    const response = await fetch('https://api.themoviedb.org/3/authentication/guest_session/new', {
+      headers: this.headers,
+    })
+    const body = await response.json()
+    console.log(body)
+    return body
+  }
 
-  static async getMovies(searchQuery = 'return', page = 1) {
+  static async guestSessionInit() {
+    this.guestSessionId = localStorage.getItem('guestSessionId')
+
+    if (!this.guestSessionId) {
+      const response = await this.guestSession()
+      this.guestSessionId = response.guest_session_id
+      localStorage.setItem('guestSessionId', response.guest_session_id)
+    }
+  }
+
+  static async getMovies(searchQuery, page) {
     if (!searchQuery) return { results: null }
     const res = await fetch(
-      `${this.baseURL}/search/movie/?api_key=${this.apiKey}&include_adult=false&query=${searchQuery}&page=${page}`,
+      `https://api.themoviedb.org/3/search/movie/?api_key=${this.apiKey}&include_adult=false&query=${searchQuery}&page=${page}`,
       {
         headers: this.headers,
       }
@@ -44,24 +61,6 @@ export default class ApiService {
     })
 
     return genres
-  }
-
-  static async guestSession() {
-    const response = await fetch('https://api.themoviedb.org/3/authentication/guest_session/new', {
-      headers: this.headers,
-    })
-    const body = await response.json()
-    return body
-  }
-
-  static async guestSessionInit() {
-    this.guestSessionId = localStorage.getItem('guestSessionId')
-
-    if (!this.guestSessionId) {
-      const response = await this.guestSession()
-      this.guestSessionId = response.guest_session_id
-      localStorage.setItem('guestSessionId', response.guest_session_id)
-    }
   }
 
   static async rateMovie(id, rating) {
