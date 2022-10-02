@@ -11,3 +11,6 @@
 .app__search {
     margin-bottom: 32px;
 }
+.app__pagination {
+    margin: 1em!important;
+}

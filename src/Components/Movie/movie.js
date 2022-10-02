@@ -60,7 +60,8 @@ export default class Movie extends React.Component {
       return `${useWordBoundary ? subString.substring(0, subString.lastIndexOf(' ')) : subString} ...`
     }
 
-    const briefOverview = summary.apply(movie.overview, [160, true])
+    const briefOverview = summary.apply(movie.overview, [135, true])
+    const cutTitle = summary.apply(movie.original_title, [22, true])
     const rating = Math.round(movie.vote_average * 10) / 10
 
     let movieRating = 'movie__rating'
@@ -73,7 +74,7 @@ export default class Movie extends React.Component {
     return (
       <Card className="movie" cover={cover} bordered={false} ref={this.card}>
         <Title className="movie__title">
-          {movie.original_title}
+          {cutTitle}
           <div className={movieRating}>{rating}</div>
         </Title>
         <Text className="movie__date">{date}</Text>
