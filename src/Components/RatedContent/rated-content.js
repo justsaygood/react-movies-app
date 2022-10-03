@@ -82,6 +82,8 @@ export default class RatedContent extends React.Component {
           current={paginationValue}
           total={allMovies}
           onChange={this.onPaginationChange}
+          hideOnSinglePage
+          pageSize={20}
         />
       </section>
     )

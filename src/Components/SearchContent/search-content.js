@@ -51,7 +51,6 @@ export default class SearchContent extends React.Component {
           loading: false,
         })
         this.saveState()
-        console.log(body.total_results)
       })
       .catch((error) => {
         this.setState({
@@ -90,7 +89,7 @@ export default class SearchContent extends React.Component {
   }
 
   onSearchChange = (event) => {
-    this.setState({ searchValue: event.target.value, loading: true, error: false })
+    this.setState({ searchValue: event.target.value, loading: true, error: false, paginationValue: 1 })
   }
 
   onPaginationChange = (paginationValue) => this.setState({ paginationValue })
@@ -114,6 +113,8 @@ export default class SearchContent extends React.Component {
           current={paginationValue}
           total={allMovies}
           onChange={this.onPaginationChange}
+          hideOnSinglePage
+          pageSize={20}
         />
       </section>
     )
