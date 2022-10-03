@@ -75,7 +75,7 @@ export default class RatedContent extends React.Component {
       <section className="app__content">
         {loading ? <Spin className="spinner" size="large" /> : null}
         {error ? <Alert message={error.message} type="error" showIcon /> : null}
-        <MovieList movies={movies} loading={loading} error={error} />
+        <MovieList movies={movies} error={error} />
         <Pagination
           className="app__pagination"
           showSizeChanger={false}

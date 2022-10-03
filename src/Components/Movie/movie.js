@@ -60,7 +60,7 @@ export default class Movie extends React.Component {
       return `${useWordBoundary ? subString.substring(0, subString.lastIndexOf(' ')) : subString} ...`
     }
 
-    const briefOverview = summary.apply(movie.overview, [135, true])
+    const briefOverview = summary.apply(movie.overview, [130, true])
     const cutTitle = summary.apply(movie.original_title, [22, true])
     const rating = Math.round(movie.vote_average * 10) / 10
 

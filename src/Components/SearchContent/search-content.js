@@ -15,7 +15,7 @@ export default class SearchContent extends React.Component {
     searchValue: localStorage.getItem('searchPageData')
       ? JSON.parse(localStorage.getItem('searchPageData')).searchValue
       : '',
-    allMovies: null,
+    allMovies: 0,
     paginationValue: localStorage.getItem('searchPageData')
       ? JSON.parse(localStorage.getItem('searchPageData')).paginationValue
       : 1,
@@ -51,6 +51,7 @@ export default class SearchContent extends React.Component {
           loading: false,
         })
         this.saveState()
+        console.log(body.total_results)
       })
       .catch((error) => {
         this.setState({

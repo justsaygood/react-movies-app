@@ -79,8 +79,8 @@ export default class ApiService {
     )
     const body = await response.json()
     if (body.success !== true) throw new Error('rating is unavailable')
-    console.log(body)
-    console.log(response)
+    // console.log(body)
+    // console.log(response)
     return body
   }
 
